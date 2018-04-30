@@ -253,25 +253,26 @@ public class ComparisonSort {
      * @param <E>  the type of values to be sorted
      * @param A    the array to sort
      */
-    public static <E extends Comparable<E>> void heapSort(E[] A) {
-    	//Set the keyArray index being pointed at with the item
-    	SortObject[] heap = new SortObject[A.length+1];
-    	for(int i = 0; i<A.length; i++){
-    		heap[i+1] = (SortObject)A[i];
-    		
-        	/*Bubble up the item to make sure that its value is less than that of
-        	*its parents
-        	*/
-        	ComparisonSort.bubbleUp(heap, i+1);
-    	}
-    	
-    	for(int i =1; i< heap.length;i++){
-    		A[i-1] = assign(removeMax(heap, heap.length-i));
-    	}
+//    public static <E extends Comparable<E>> void heapSort(E[] A) {
+//    	//Set the keyArray index being pointed at with the item
+//    	SortObject[] heap = new SortObject[A.length+1];
+//    	for(int i = 0; i<A.length; i++){
+//    		heap[i+1] = (SortObject)A[i];
+//    		
+//        	/*Bubble up the item to make sure that its value is less than that of
+//        	*its parents
+//        	*/
+//        	ComparisonSort.bubbleUp(heap, i+1);
+//    	}
+//    	
+//    	for(int i =1; i< heap.length;i++){
+//    		A[i-1] = assign(removeMax(heap, heap.length-i));
+//    	}
+//    
+//    }
     
-    }
-    
-    private static <E extends Comparable<E>> void bubbleUp(E[] heap, int value){
+   
+	private static <E extends Comparable<E>> void bubbleUp(E[] heap, int value){
     	//if the node is in arrayHeap[1], it has no parents to be compared to
     	if(value == 1){
     		return;
@@ -331,6 +332,69 @@ public class ComparisonSort {
      */
     public static <E extends Comparable<E>> void selection2Sort(E[] A) {
         // TODO: implement this sorting algorithm
+    	prevDataMoves=0;
+    	int begin = 0;
+    	int end = A.length-1; 
+    	int i = 0;
+    	int j = 0;
+    	E temp; 
+    	E temp1; 
+    	int tempMin = 0;
+    	int tempMax= A.length-1;
+    	
+    	do{
+    		i = begin + 1;
+    		j = end - 1; 
+    		
+    		if(A[begin].compareTo(A[end])>0){
+    		temp = A[begin];
+    		A[begin] = A[end]; 
+    		A[end] = temp; 
+    	}
+    		tempMax = end;
+    		tempMin = begin;
+    	do{
+    	 
+    		
+    		if(A[i].compareTo(A[j])>0){
+    			if(A[i].compareTo(A[tempMax])>0){
+    				tempMax = i; 
+    			}
+    			if(A[j].compareTo(A[tempMin])<0){
+    				tempMin = j; 
+    			
+    		}
+    		}
+    		else {
+    			if(A[j].compareTo(A[tempMax])>0){
+    				tempMax = j; 
+    			
+    		}
+    			if(A[i].compareTo(A[tempMin])<0){
+    				tempMin = i;  
+    			}
+    		}
+    		
+    		i++;
+    		j--;
+    		
+
+    	
+    	} while(i<=j);
+    	
+    	temp =A[end];
+    	temp1 = A[begin];
+    	A[end] = assign(A[tempMax]);
+    	A[begin] = assign(A[tempMin]);
+    	A[tempMax ] = assign(temp);
+    	A[tempMin] = assign(temp1) ; 
+    	
+    	
+    	begin++;
+    	end--; 
+    	} while(begin<=end);
+     
+    	
     }
 
     
