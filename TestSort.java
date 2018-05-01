@@ -16,7 +16,9 @@ public class TestSort {
      *              generating values
      */
     public static void main(String[] args) {
-/*
+
+    	int compares = 0;
+    	/*
         if (args.length != 2) {
             System.err.println("Expected 2 but got " + args.length);
             System.err.println("Arguments expected:");
@@ -40,11 +42,23 @@ public class TestSort {
 
         // It is important to give the seed so you can reproduce results.
         Random random = new Random(seed);
-        for (int k = 0; k < arrSize; k++)
+        for (int k = 0; k < arrSize; k++){
             arr[k] = new SortObject(random.nextInt());
-
-        ComparisonSort.mergeSort(arr);
+        }
+        
+       
+        ComparisonSort.runAllSorts(arr);
+      
+       // for(int i = 0; i<arr.length; i++){
+        //	compares = compares + arr[i].getCompares();
+        	//System.out.println(compares);
+       // }
+        
         System.out.println(ComparisonSort.prevDataMoves);
+       
+//        for(int i = 0; i<arr.length; i++){
+//        	System.out.print(arr[i]+", ");
+//        }
         // Run all the sorts on the array of random integers.
         //ComparisonSort.runAllSorts(arr);
     }
