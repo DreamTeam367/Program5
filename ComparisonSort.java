@@ -39,8 +39,8 @@ public class ComparisonSort {
         int N = A.length;
 
         for (k = 0; k < N; k++) {
-            //assign(min,A[k]);
-            min = A[k];
+            
+            min = assign(A[k]);
             prevDataMoves++;
             minIndex = k;
             for (j = k+1; j < N; j++) {
@@ -254,7 +254,8 @@ public class ComparisonSort {
      * @param A    the array to sort
      */
     public static <E extends Comparable<E>> void heapSort(E[] A) {
-    	//Set the keyArray index being pointed at with the item
+    	prevDataMoves=0;
+    	//Set the heap index being pointed at with the item
     	SortObject[] heap = new SortObject[A.length+1];
     	for(int i = 0; i<A.length; i++){
     		heap[i+1] = (SortObject)A[i];
@@ -264,14 +265,77 @@ public class ComparisonSort {
         	*/
         	ComparisonSort.bubbleUp(heap, i+1);
     	}
+    	//for(int i =1; i<heap.length;i++){
+    	//	System.out.println(heap[i].toString());
+    	//}
     	
     	for(int i =1; i< heap.length;i++){
-    		A[i-1] = assign(removeMax(heap, heap.length-i));
+    		A[heap.length-1-i] = (E)assign(removeMax(heap, heap.length-i));
     	}
     
     }
     
-   
+    private static <E extends Comparable<E>> SortObject removeMax(SortObject[] heap, int endMarker) {
+    	//store the item with the highest priority
+    	SortObject tempMax = assign(heap[1]);
+    	heap[1] = assign(heap[endMarker]);
+    	bubbleDown(heap,1);
+        return tempMax;  			//return the max item that was removed
+	}
+    
+    /**
+     * Recursive method that ensures that the item at the location passed to it
+     * is larger than its children. If one of its children is larger than it,
+     * the method will switch the two items in the heap, and recall the method to
+     * check again if the item is larger than its child. Maintains the value
+     * property of the heap.
+     *
+     * @param (int key) the location in arrayHeap of the item that is to be 
+     * bubbled down
+     */
+    private static <E extends Comparable<E>> void bubbleDown(SortObject[] heap, int key){
+    	/*
+    	 * if the left child does not exist, do nothing. Else if the right child
+    	 * does not exist, but the left does. Compare the prirites of the parent
+    	 * and the child, and switch if the child is larger than the parent.
+    	 */
+    	if(2*key > heap.length-1){
+    		return;
+    	}
+    	if(2*key+1 > heap.length-1){
+    		if(heap[2*key].compareTo(heap[key])>0){
+    			SortObject  temp = assign(heap[key]);
+    			heap[key] = assign(heap[2*key]);
+    			heap[2*key] = assign(temp);
+    			return;
+    		}
+    	}
+    		
+    	
+    	
+    	/*
+    	 * If either of the children have higher priorities than the parent, switch
+    	 * the parent with the child that has the greater value.
+    	 */
+    	if(heap[key].compareTo(heap[2*key]) < 0 || heap[key].compareTo(heap[2*key+1])<0){
+	    	if(heap[2*key].compareTo(heap[2*key+1])>0){
+	    		//switch parent with left child
+	    		SortObject  temp = assign(heap[key]);
+	    		heap[key] = assign(heap[2*key]);
+	    		heap[2*key] = assign(temp);
+	    		bubbleDown(heap, 2*key);
+	    	}else{
+	    		//swtich parent with right child
+	    		SortObject  temp = assign(heap[key]);
+				heap[key] = assign(heap[2*key +1]);
+				heap[2*key +1] = assign(temp);
+				bubbleDown(heap, 2*key+1);
+	    	}
+    	}
+    	
+    }
+    
+    
 	private static <E extends Comparable<E>> void bubbleUp(E[] heap, int value){
     	//if the node is in arrayHeap[1], it has no parents to be compared to
     	if(value == 1){
@@ -332,71 +396,9 @@ public class ComparisonSort {
      */
     public static <E extends Comparable<E>> void selection2Sort(E[] A) {
         // TODO: implement this sorting algorithm
-    	prevDataMoves=0;
-    	int begin = 0;
-    	int end = A.length-1; 
-    	int i = 0;
-    	int j = 0;
-    	E temp; 
-    	E temp1; 
-    	int tempMin = 0;
-    	int tempMax= A.length-1;
-    	
-    	do{
-    		i = begin + 1;
-    		j = end - 1; 
-    		
-    		if(A[begin].compareTo(A[end])>0){
-    		temp = A[begin];
-    		A[begin] = A[end]; 
-    		A[end] = temp; 
-    	}
-    		tempMax = end;
-    		tempMin = begin;
-    	do{
-    	 
-    		
-    		if(A[i].compareTo(A[j])>0){
-    			if(A[i].compareTo(A[tempMax])>0){
-    				tempMax = i; 
-    			}
-    			if(A[j].compareTo(A[tempMin])<0){
-    				tempMin = j; 
-    			
-    		}
-    		}
-    		else {
-    			if(A[j].compareTo(A[tempMax])>0){
-    				tempMax = j; 
-    			
-    		}
-    			if(A[i].compareTo(A[tempMin])<0){
-    				tempMin = i;  
-    			}
-    		}
-    		
-    		i++;
-    		j--;
-    		
-
-    	
-    	} while(i<=j);
-    	
-    	temp =A[end];
-    	temp1 = A[begin];
-    	A[end] = assign(A[tempMax]);
-    	A[begin] = assign(A[tempMin]);
-    	A[tempMax ] = assign(temp);
-    	A[tempMin] = assign(temp1) ; 
-    	
-    	
-    	begin++;
-    	end--; 
-    	} while(begin<=end);
-     
-    	
     }
 
+    
     
     /**
      * <b>Extra Credit:</b> Sorts the given array using the insertion2 sort 
@@ -443,9 +445,51 @@ public class ComparisonSort {
      * @throws IllegalArgumentException if the length or A is not even
      */    
     public static <E extends Comparable<E>> void insertion2Sort(E[] A) { 
-        // TODO: implement this sorting algorithm 
+       if(A.length%2 != 0 && A.length>=2){
+    	   throw new IllegalArgumentException();
+       }
+       
+       int left = A.length/2 -1;
+       int right = left+1;
+       
+       if(A[left].compareTo(A[right]) > 0){
+    	   swap(A,left,right);
+       }
+       
+       while(left>0){
+    	   left--;
+    	   right++;
+    	   if(A[left].compareTo(A[right]) > 0){
+        	   swap(A,left,right);
+           }
+    	   rightToLeft(A,right);
+    	   leftToRight(A,left);
+       }
+       
+       
+       
     }
-
+    
+    private static <E extends Comparable<E>> void rightToLeft(E[] A, int right) {
+    	E tmp = assign(A[right]);
+    	right--;
+        while (A[right].compareTo(tmp) > 0) {
+        	A[right+1] = assign(A[right]); 
+        	right--;
+            }
+            A[right+1] = assign(tmp);
+    }
+    
+    private static <E extends Comparable<E>> void leftToRight(E[] A, int left) {
+    	E tmp = assign(A[left]);
+    	left++;
+        while (A[left].compareTo(tmp) < 0) {
+        	A[left-1] = assign(A[left]); 
+        	left++;
+            }
+            A[left-1] = assign(tmp);
+    }
+    
     /**
      * Internal helper for printing rows of the output table.
      * 
@@ -485,92 +529,11 @@ public class ComparisonSort {
      * @param A  the array to sort
      */
     static public void runAllSorts(SortObject[] A) {
-       SortObject [] tempArray = A; 
-    	long time1 = 0;
-    	long time2 = 0; 
-    	
-    	
-    	System.out.format("%-23s%15s%15s%15s\n", "algorithm", "data compares", 
+        System.out.format("%-23s%15s%15s%15s\n", "algorithm", "data compares", 
                           "data moves", "milliseconds");
         System.out.format("%-23s%15s%15s%15s\n", "---------", "-------------", 
                           "----------", "------------");
-        //////////////////////////////////////////////////////////////
-        time1 = System.currentTimeMillis();
-    	selectionSort(A);
-    	time2 = System.currentTimeMillis();
-    	
-        printStatistics("selection sort",SortObject.getCompares(),
-        		prevDataMoves,(time2-time1));
-       
-        SortObject.resetCompares();
-        A= tempArray; 
-        //////////////////////////////////////////////////////////////
-        time1 = System.currentTimeMillis();
-        insertionSort(A);
-        time2 = System.currentTimeMillis();
-        
-        printStatistics("insertion sort",SortObject.getCompares(),
-        		prevDataMoves,(time2-time1));
-    
-        SortObject.resetCompares();
-        A= tempArray; 
-        //////////////////////////////////////////////////////////////
-        time1 = System.currentTimeMillis();
-    	mergeSort(A);
-    	time2 = System.currentTimeMillis();
-    	
-    	printStatistics("merge sort",SortObject.getCompares(),
-        		prevDataMoves,(time2-time1));
-    
-        SortObject.resetCompares();
-        A= tempArray; 
-        //////////////////////////////////////////////////////////////
-        time1 = System.currentTimeMillis();
-    	quickSort(A);
-    	time2 = System.currentTimeMillis();
-    	
-    	printStatistics("quick sort",SortObject.getCompares(),
-        		prevDataMoves,(time2-time1));
-    
-        SortObject.resetCompares();
-        A= tempArray; 
-        
-        //////////////////////////////////////////////////////////////
-        time1 = System.currentTimeMillis();
-    	heapSort(A);
-    	time2 = System.currentTimeMillis();
-    	
-    	printStatistics("heap sort",SortObject.getCompares(),
-        		prevDataMoves,(time2-time1));
-    
-        SortObject.resetCompares();
-        A= tempArray; 
-        //////////////////////////////////////////////////////////////
-        time1 = System.currentTimeMillis();
-    	selection2Sort(A);
-    	time2 = System.currentTimeMillis();
-    	
-    	printStatistics("selection2 sort",SortObject.getCompares(),
-        		prevDataMoves,(time2-time1));
-    
-        SortObject.resetCompares();
-        A= tempArray; 
-        
-        //////////////////////////////////////////////////////////////
-        time1 = System.currentTimeMillis();
-    	insertion2Sort(A);
-    	time2 = System.currentTimeMillis();
-    	
-    	printStatistics("insertion2 sort",SortObject.getCompares(),
-        		prevDataMoves,(time2-time1));
-    
-        SortObject.resetCompares();
-        A= tempArray; 
-        
-        
-        
-        
-        
+
         // TODO: run each sort and print statistics about what it did
     }
 }
