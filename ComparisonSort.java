@@ -271,7 +271,8 @@ public class ComparisonSort {
     
     }
     
-    private static <E extends Comparable<E>> void bubbleUp(E[] heap, int value){
+   
+	private static <E extends Comparable<E>> void bubbleUp(E[] heap, int value){
     	//if the node is in arrayHeap[1], it has no parents to be compared to
     	if(value == 1){
     		return;
@@ -331,6 +332,69 @@ public class ComparisonSort {
      */
     public static <E extends Comparable<E>> void selection2Sort(E[] A) {
         // TODO: implement this sorting algorithm
+    	prevDataMoves=0;
+    	int begin = 0;
+    	int end = A.length-1; 
+    	int i = 0;
+    	int j = 0;
+    	E temp; 
+    	E temp1; 
+    	int tempMin = 0;
+    	int tempMax= A.length-1;
+    	
+    	do{
+    		i = begin + 1;
+    		j = end - 1; 
+    		
+    		if(A[begin].compareTo(A[end])>0){
+    		temp = A[begin];
+    		A[begin] = A[end]; 
+    		A[end] = temp; 
+    	}
+    		tempMax = end;
+    		tempMin = begin;
+    	do{
+    	 
+    		
+    		if(A[i].compareTo(A[j])>0){
+    			if(A[i].compareTo(A[tempMax])>0){
+    				tempMax = i; 
+    			}
+    			if(A[j].compareTo(A[tempMin])<0){
+    				tempMin = j; 
+    			
+    		}
+    		}
+    		else {
+    			if(A[j].compareTo(A[tempMax])>0){
+    				tempMax = j; 
+    			
+    		}
+    			if(A[i].compareTo(A[tempMin])<0){
+    				tempMin = i;  
+    			}
+    		}
+    		
+    		i++;
+    		j--;
+    		
+
+    	
+    	} while(i<=j);
+    	
+    	temp =A[end];
+    	temp1 = A[begin];
+    	A[end] = assign(A[tempMax]);
+    	A[begin] = assign(A[tempMin]);
+    	A[tempMax ] = assign(temp);
+    	A[tempMin] = assign(temp1) ; 
+    	
+    	
+    	begin++;
+    	end--; 
+    	} while(begin<=end);
+     
+    	
     }
 
     
@@ -421,11 +485,92 @@ public class ComparisonSort {
      * @param A  the array to sort
      */
     static public void runAllSorts(SortObject[] A) {
-        System.out.format("%-23s%15s%15s%15s\n", "algorithm", "data compares", 
+       SortObject [] tempArray = A; 
+    	long time1 = 0;
+    	long time2 = 0; 
+    	
+    	
+    	System.out.format("%-23s%15s%15s%15s\n", "algorithm", "data compares", 
                           "data moves", "milliseconds");
         System.out.format("%-23s%15s%15s%15s\n", "---------", "-------------", 
                           "----------", "------------");
-
+        //////////////////////////////////////////////////////////////
+        time1 = System.currentTimeMillis();
+    	selectionSort(A);
+    	time2 = System.currentTimeMillis();
+    	
+        printStatistics("selection sort",SortObject.getCompares(),
+        		prevDataMoves,(time2-time1));
+       
+        SortObject.resetCompares();
+        A= tempArray; 
+        //////////////////////////////////////////////////////////////
+        time1 = System.currentTimeMillis();
+        insertionSort(A);
+        time2 = System.currentTimeMillis();
+        
+        printStatistics("insertion sort",SortObject.getCompares(),
+        		prevDataMoves,(time2-time1));
+    
+        SortObject.resetCompares();
+        A= tempArray; 
+        //////////////////////////////////////////////////////////////
+        time1 = System.currentTimeMillis();
+    	mergeSort(A);
+    	time2 = System.currentTimeMillis();
+    	
+    	printStatistics("merge sort",SortObject.getCompares(),
+        		prevDataMoves,(time2-time1));
+    
+        SortObject.resetCompares();
+        A= tempArray; 
+        //////////////////////////////////////////////////////////////
+        time1 = System.currentTimeMillis();
+    	quickSort(A);
+    	time2 = System.currentTimeMillis();
+    	
+    	printStatistics("quick sort",SortObject.getCompares(),
+        		prevDataMoves,(time2-time1));
+    
+        SortObject.resetCompares();
+        A= tempArray; 
+        
+        //////////////////////////////////////////////////////////////
+        time1 = System.currentTimeMillis();
+    	heapSort(A);
+    	time2 = System.currentTimeMillis();
+    	
+    	printStatistics("heap sort",SortObject.getCompares(),
+        		prevDataMoves,(time2-time1));
+    
+        SortObject.resetCompares();
+        A= tempArray; 
+        //////////////////////////////////////////////////////////////
+        time1 = System.currentTimeMillis();
+    	selection2Sort(A);
+    	time2 = System.currentTimeMillis();
+    	
+    	printStatistics("selection2 sort",SortObject.getCompares(),
+        		prevDataMoves,(time2-time1));
+    
+        SortObject.resetCompares();
+        A= tempArray; 
+        
+        //////////////////////////////////////////////////////////////
+        time1 = System.currentTimeMillis();
+    	insertion2Sort(A);
+    	time2 = System.currentTimeMillis();
+    	
+    	printStatistics("insertion2 sort",SortObject.getCompares(),
+        		prevDataMoves,(time2-time1));
+    
+        SortObject.resetCompares();
+        A= tempArray; 
+        
+        
+        
+        
+        
         // TODO: run each sort and print statistics about what it did
     }
 }
